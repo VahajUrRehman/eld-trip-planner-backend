@@ -144,6 +144,6 @@ render it that way on the frontend.
 - 1 hour on-duty time assumed for pickup and 1 hour for drop-off
 - A fuel stop every 1,000 miles (30 min, on-duty not driving)
 
-This is a simplified, rule-faithful simulation — it doesn't model adverse
+This is a simplified, rule-faithful simulation it doesn't model adverse
 driving conditions, sleeper-berth split-duty provisions, or multi-driver
 teams. Easy to extend in `hos.py` if you need those.
