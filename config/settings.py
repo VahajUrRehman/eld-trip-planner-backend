@@ -21,12 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-oex#2r0_4p=qrct5ngst*_ftdqt6aq*dsko7@8a5hmoduu7$tq'
+SECRET_KEY = config(
+    'SECRET_KEY',
+    default='django-insecure-oex#2r0_4p=qrct5ngst*_ftdqt6aq*dsko7@8a5hmoduu7$tq',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Render sets RENDER_EXTERNAL_HOSTNAME automatically
+RENDER_EXTERNAL_HOSTNAME = config('RENDER_EXTERNAL_HOSTNAME', default=None)
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -120,6 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Default primary key field type
@@ -133,6 +142,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",   # CRA default
     "http://127.0.0.1:3000",
 ]
+
+# add deployed frontend origin(s) via env, comma-separated
+# e.g. CORS_EXTRA_ORIGINS=https://eld-trip-planner.vercel.app
+_extra_origins = config('CORS_EXTRA_ORIGINS', default='')
+if _extra_origins:
+    CORS_ALLOWED_ORIGINS += [o.strip() for o in _extra_origins.split(',') if o.strip()]
 
 # djangorestframework defaults
 REST_FRAMEWORK = {
